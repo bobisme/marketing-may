@@ -1,0 +1,100 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/bobisme/marketing-may/blob/main/assets/schemas/evidence_ledger.schema.json",
+  "title": "Evidence Ledger",
+  "description": "Structured record of claims used in marketing decisions, with type (fact / inference / hypothesis / recommendation), behavioral strength, sources, downstream uses, and a kill rule. Required for decision-grade outputs (pricing, channel commitment, hiring, scaling). Inline citations are sufficient for quick-mode answers.",
+  "type": "object",
+  "required": ["entries"],
+  "properties": {
+    "subject": {
+      "type": "string",
+      "description": "What this ledger is about — product/segment/decision context."
+    },
+    "as_of": {
+      "type": "string",
+      "format": "date",
+      "description": "Date the ledger was last updated. Memories rot; refresh quarterly or before major decisions."
+    },
+    "entries": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["id", "claim", "type", "confidence"],
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[a-z0-9_-]+$",
+            "description": "Stable short id used to reference this entry from copy or assets, e.g. 'wtp-pilot-3'."
+          },
+          "claim": {
+            "type": "string",
+            "minLength": 5,
+            "description": "The claim itself, in one sentence. State the claim as a falsifiable proposition, not as marketing copy."
+          },
+          "type": {
+            "enum": ["observed_fact", "inference", "hypothesis", "recommendation"],
+            "description": "Per the SKILL.md output contract: facts are observed; inferences combine facts; hypotheses are unverified; recommendations propose action."
+          },
+          "confidence": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1,
+            "description": "Subjective confidence 0..1. Use 0.9+ only for first-party behavioral evidence."
+          },
+          "behavioral_strength": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 6,
+            "description": "Per ALGORITHMS.md §1 — 1=vague interest, 3=signup/click, 5=paid pilot/LOI, 6=repeat usage/expansion."
+          },
+          "segment": {
+            "type": "string",
+            "description": "ICP segment this claim applies to. A claim valid for one segment may be false for another."
+          },
+          "sources": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["origin", "retrieved_at"],
+              "additionalProperties": false,
+              "properties": {
+                "origin": {
+                  "type": "string",
+                  "description": "URL, interview ID, CRM record, or internal source name."
+                },
+                "retrieved_at": {
+                  "type": "string",
+                  "format": "date",
+                  "description": "Date the source was inspected. Sources older than 6 months should be re-verified before load-bearing decisions."
+                },
+                "quote": {
+                  "type": "string",
+                  "description": "Exact quote or numeric value. Paraphrase loses falsifiability."
+                },
+                "kind": {
+                  "enum": ["interview", "review", "competitor_page", "analytics", "experiment", "support_ticket", "external_research", "other"]
+                }
+              }
+            }
+          },
+          "used_in": {
+            "type": "array",
+            "items": {"type": "string"},
+            "description": "Asset ids or section names that load-bear on this claim — e.g. 'hero', 'pricing-page-tier-2', 'outbound-template-v3'."
+          },
+          "kill_rule": {
+            "type": "string",
+            "description": "What evidence would invalidate this claim. Without a kill rule the claim cannot be wrong, which means it is not load-bearing."
+          },
+          "supersedes": {
+            "type": "array",
+            "items": {"type": "string"},
+            "description": "Entry ids this claim replaces. Track refutation chains rather than silently overwriting."
+          }
+        }
+      }
+    }
+  }
+}

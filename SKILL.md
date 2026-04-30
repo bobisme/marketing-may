@@ -207,6 +207,7 @@ Fill these in or copy into user output.
 | `assets/schemas/experiment_plan.schema.json` | Validate experiment table |
 | `assets/schemas/marketing_asset.schema.json` | Validate produced assets |
 | `assets/schemas/pricing_research.schema.json` | Validate pricing study output |
+| `assets/schemas/evidence_ledger.schema.json` | Validate the evidence ledger that accompanies decision-grade outputs (pricing commits, channel scaling, hiring, kill/pivot decisions) |
 
 ## Scripts
 
@@ -223,3 +224,4 @@ Run for repeatable analyses. Each accepts CSV/text inputs (see `references/examp
 | `scripts/copy_lint.py` | Mechanical check of marketing copy against the quality checklist (vague adjectives, unsupported claims, dark patterns, hidden price, missing CTA) |
 | `scripts/retention_analyzer.py` | Cohort × week retention table from event logs with directional curve-shape diagnosis (plateau / declining / flattening) |
 | `scripts/outbound_list_scorer.py` | Score an account list against weighted ICP criteria (firmographic, tech stack, role, recency-bounded triggers, negatives) and rank into A/B/C tiers |
+| `scripts/validate_artifact.py` | Validate a JSON artifact (competitor teardown, event taxonomy, experiment plan, marketing asset, pricing research, evidence ledger) against its schema |

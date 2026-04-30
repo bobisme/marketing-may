@@ -88,9 +88,10 @@ WEAK_SOCIAL_PROOF_RE = re.compile(
 )
 
 # Lint suppression: <!-- lint:ignore <rule> --> or # lint:ignore <rule>
+# Non-greedy capture so the trailing `-->` doesn't get eaten as part of a rule name.
 IGNORE_RE = re.compile(
-    r"(?:<!--|#|//)\s*lint:ignore\s+([a-z\-,\s]+)\s*(?:-->)?",
-    re.IGNORECASE,
+    r"(?:<!--|#|//)\s*lint:ignore\s+(.+?)\s*(?:-->|$)",
+    re.IGNORECASE | re.MULTILINE,
 )
 
 
