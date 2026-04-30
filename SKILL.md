@@ -51,9 +51,14 @@ Match user intent to columns. Default to loading 1–3 files; never load all.
 | "What should I charge?" | `pricing_offer` | `05_pricing_packaging_offer` | `pricing_research_analyzer` |
 | "Are competitors eating us?" | `competitive_intel`, `browsing_recipe` | `03_competitive_intelligence` | `competitor_matrix` |
 | "Why isn't our funnel converting?" | `funnel_analytics`, `segmentation_icp` | `06_funnel_instrumentation` | `funnel_analyzer` |
+| "Are users sticking around?" | `funnel_analytics`, `metric_trees` | `06_funnel_instrumentation` | `retention_analyzer` |
+| "What should our north-star metric be?" | `metric_trees`, `funnel_analytics` | `06_funnel_instrumentation` | — |
 | "Should we run this test? / How big a sample?" | `experiments`, `stats_primer`, `ALGORITHMS` §7 | `07_experiment_plan` | `experiment_prioritizer`, `stats_cli` |
 | "We just shipped a test — read the result" | `experiments`, `stats_primer` | `07_experiment_plan` (post-test memo) | `stats_cli srm`, `stats_cli bayes` |
-| "Pick a channel / cold outbound" | `channels_outbound` | `08_channel_strategy` | — |
+| "Pick a channel / cold outbound" | `channels_outbound`, `modern_channels` | `08_channel_strategy` | — |
+| "Score / rank an outbound list" | `channels_outbound`, `segmentation_icp` | `08_channel_strategy` | `outbound_list_scorer` |
+| "AI search / GEO / get cited by ChatGPT" | `modern_channels`, `browsing_recipe` | — | — |
+| "We're building a marketplace" | `marketplace_network`, `metric_trees` (marketplace section) | — | — |
 | "Are we kidding ourselves?" | `decision_trees`, `ALGORITHMS` §9 | `09_kill_pivot_narrow` | — |
 | "Run customer interviews" | `discovery` | `01_customer_discovery` | — |
 | "Vague: grow / get users / market it" | `PRACTICE_DIGEST`, then `segmentation_icp` | `00_product_intake` | — |
@@ -174,7 +179,10 @@ Read each as needed. Do not load all of them.
 | `references/BIBLIOGRAPHY.md` | Source bibliography for marketing claims and frameworks |
 | `references/browsing_recipe.md` | Per-page extraction prompts and stopping rules for live competitor/pricing/review/AI-search research |
 | `references/stats_primer.md` | When to A/B test, when to refuse, sample-size sanity, SRM as precondition, Bayesian small-traffic guidance |
-| `references/examples/` | Sample input data: competitors CSV, events CSV, experiments CSV, Van Westendorp/Gabor-Granger, VOC text |
+| `references/modern_channels.md` | AI search / AEO / GEO, podcasts, communities, newsletter sponsorships — first tests, kill rules, 2026 CPM ranges |
+| `references/marketplace_network.md` | Two-sided marketplace cold-start, liquidity targets, take-rate ranges, disintermediation defense |
+| `references/metric_trees.md` | Pre-built starter trees by business model (self-serve SaaS, usage-based, marketplace, OSS-led, course, sales-led B2B, e-commerce) |
+| `references/examples/` | Sample input data: competitors CSV, events CSV, experiments CSV, Van Westendorp/Gabor-Granger, VOC text, ICP JSON |
 | `references/examples/case_studies/` | Filled walk-throughs (indie devtool, marketplace cold-start) showing intake → decision |
 
 ## Templates and schemas
@@ -213,3 +221,5 @@ Run for repeatable analyses. Each accepts CSV/text inputs (see `references/examp
 | `scripts/pricing_research_analyzer.py` | Analyze Van Westendorp / Gabor-Granger inputs |
 | `scripts/stats_cli.py` | Sample-size, SRM check, Bayesian P(B>A) for low-traffic experiments |
 | `scripts/copy_lint.py` | Mechanical check of marketing copy against the quality checklist (vague adjectives, unsupported claims, dark patterns, hidden price, missing CTA) |
+| `scripts/retention_analyzer.py` | Cohort × week retention table from event logs with directional curve-shape diagnosis (plateau / declining / flattening) |
+| `scripts/outbound_list_scorer.py` | Score an account list against weighted ICP criteria (firmographic, tech stack, role, recency-bounded triggers, negatives) and rank into A/B/C tiers |

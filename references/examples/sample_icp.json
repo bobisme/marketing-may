@@ -1,0 +1,29 @@
+{
+  "_comment": "Example ICP for an indie SaaS targeting B2B SaaS finance/ops teams using Stripe. Edit fields, weights, and triggers to match your business.",
+  "criteria": [
+    {"field": "industry", "kind": "in", "match": ["b2b saas", "fintech", "marketplace"], "weight": 5},
+    {"field": "headcount", "kind": "range", "match": [10, 200], "weight": 5},
+    {"field": "tech_stack", "kind": "contains", "match": "Stripe", "weight": 5},
+    {"field": "country", "kind": "in", "match": ["US", "CA", "UK", "AU"], "weight": 2},
+    {"field": "role_target", "kind": "in", "match": ["VP Finance", "Head of Ops", "CFO", "Controller"], "weight": 3},
+    {
+      "field": "trigger_funding",
+      "kind": "trigger_present",
+      "weight": 4,
+      "recency_days": 90,
+      "recency_field": "trigger_funding_date"
+    },
+    {
+      "field": "trigger_hiring",
+      "kind": "trigger_present",
+      "weight": 3,
+      "recency_days": 60,
+      "recency_field": "trigger_hiring_date"
+    }
+  ],
+  "negatives": [
+    {"field": "industry", "kind": "in", "match": ["consulting", "agency"], "penalty": 3},
+    {"field": "headcount", "kind": "range", "match": [0, 9], "penalty": 2}
+  ],
+  "tier_thresholds": {"A": 0.70, "B": 0.45}
+}
