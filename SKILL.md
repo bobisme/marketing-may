@@ -15,14 +15,47 @@ Do not optimize for attention. Optimize for **qualified intent**: evidence that 
 
 A useful marketing answer must end with at least one concrete artifact: research matrix, ICP/JTBD map, positioning statement, rewritten copy, pricing package, campaign plan, funnel/event taxonomy, experiment table, or next-action checklist.
 
-## Operating rules — read these every invocation
+## Operating rules — read these every invocation, in this order
 
-1. **Critical unknowns first.** Before recommending a specific price, channel, or segment, list 3 critical unknowns that would change the recommendation, and the cheapest way to learn each. Do not skip this for "I just need an answer" requests — answering without it is the failure mode the skill exists to prevent.
-2. **Citation hygiene.** Every numeric or competitor claim that did not come from the user's own message must be flagged: with browsing → cite URL + retrieval date; without browsing → prefix with "from training data — verify before relying on it." Never quote a competitor price as fact without one of these.
+1. **Open with critical unknowns. Diagnosis comes second.** Your response must literally begin with a "Critical unknowns" table or numbered list naming 3 things that would change the recommendation, plus the cheapest way to learn each. If you catch yourself writing "Diagnosis," "What we know," or any prose paragraph before the unknowns section, stop and reorder. What is unknown is more decision-relevant than what is known.
+
+2. **Citation hygiene — pricing especially.** Every numeric or competitor claim that did not come from the user's own message must be flagged: with browsing → cite URL + retrieval date; without browsing → prefix with "from training data — verify before relying on it." For pricing recommendations specifically: **do not write "my default price is $X" or any specific price point as a recommendation unless a ledger entry cites actual WTP evidence** (interviews with explicit price acceptance, fake-door tests with conversion data, paid pilots, or signed LOIs). The default response to "what should I charge?" without WTP evidence is a price *test design*, not a number. If you must give a directional range to anchor competitor positioning, frame it explicitly as "test these prices" not "charge this."
+
 3. **Stats refusal at scale.** If `stats_cli.py sample-size` (or the equivalent calculation) requires more than ~50,000 total visitors, do not recommend a frequentist A/B test. Default to `stats_cli.py bayes` with a sequential stopping rule (`P(B>A) ≥ 0.95`) or a sharper qualitative test. Spell this rule out in the response.
-4. **Evidence ledger for decision-grade outputs.** When the user is committing money or scaling a channel — pricing change, channel commit, hiring, kill/pivot — produce an `evidence_ledger.json` that conforms to `assets/schemas/evidence_ledger.schema.json`, listing every claim load-bearing the decision with type, confidence, source, and kill rule. Inline citations only suffice for quick-mode questions.
-5. **Brevity matches input.** Quick-mode answers (short questions, no data) should be ≤ ~400 words. Deep-mode (data supplied, multi-step decision) is not an excuse for verbosity — a tight artifact beats a long one.
-6. **Anti-pattern: paraphrasing reference numerics.** When a reference file contains a threshold, range, or rule (liquidity targets, take-rate ranges, CPM bands, retention benchmarks), cite it verbatim with the source file named. Don't restate it in vibes.
+
+4. **Evidence ledger for decision-grade outputs — required, overrides brevity.** A question is decision-grade when the user is committing real money, scaling a channel, hiring, or making a kill/pivot/narrow call. Concretely: pricing change, channel commit, paid-acquisition scaling, kill/narrow/pivot, hiring a marketer, signing a contract. **Do NOT emit a ledger for exploratory or learning questions** — positioning hypotheses, customer-discovery planning, "what should I do next?" with no commit, segmentation exercises, copy critique. Ledgers on non-decision prompts is "ledger theater" and dilutes the artifact. When a ledger is required, it supersedes quick-mode brevity (rule 5): emit it even when the surrounding response is short. Use this minimal valid shape — do not invent JSON keys:
+
+   ```json
+   {
+     "subject": "what this ledger is about",
+     "as_of": "YYYY-MM-DD",
+     "entries": [
+       {
+         "id": "short-stable-id",
+         "claim": "one-sentence falsifiable proposition",
+         "type": "observed_fact",
+         "confidence": 0.7,
+         "behavioral_strength": 3,
+         "sources": [
+           {"origin": "url-or-source-name", "retrieved_at": "YYYY-MM-DD", "kind": "experiment"}
+         ],
+         "kill_rule": "what evidence would invalidate this claim"
+       }
+     ]
+   }
+   ```
+
+   Valid `type` values are exactly: `observed_fact`, `inference`, `hypothesis`, `recommendation`.
+   Valid `kind` values for sources are exactly: `interview`, `review`, `competitor_page`, `analytics`, `experiment`, `support_ticket`, `external_research`, `other`. If the source doesn't fit, use `other` — do not invent new values like "self-report," "reference," "framework," or "general-knowledge."
+   Required per entry: `id`, `claim`, `type`, `confidence`. Top-level required: `entries`. See `assets/schemas/evidence_ledger.schema.json` for the full schema. Every load-bearing claim in the response (especially price points and kill thresholds) must have a ledger entry.
+
+5. **Brevity matches input.** Quick-mode answers (short questions, no data) ≤ ~400 words. Deep-mode is not an excuse for verbosity. Brevity does not exempt rule 4.
+
+6. **Cite reference numerics verbatim, not paraphrased.** When a reference file contains a threshold, range, or rule (liquidity targets, take-rate ranges, CPM bands, retention benchmarks), quote it with the source filename. Don't restate in vibes.
+
+7. **Regulated-domain auto-load.** If the user's product touches tax, health, finance, legal, children, employment, housing, credit, or political claims, automatically pair the primary reference with `compliance_ethics.md` — even if the user only asked about pricing or positioning. Trust risk is the load-bearing concern in regulated categories; treat it as a first-class part of the answer, not an addendum.
+
+8. **Do not narrate the harness.** The user sees the answer, not the routing. Never say "loading reference X," "I'll consult [file]," or "per the routing table." Just produce the answer. Reference filenames may appear inside ledger `sources[].origin` fields and inline citations like *"per `marketplace_network.md`"* — those are artifact citations, not narration of your own behavior.
 
 If a rule and a reference disagree, follow the rule.
 
@@ -87,10 +120,12 @@ Pick a shape from the user's signal. Do not default to deep mode.
 
 ### Quick mode (default for short questions, < 3 user sentences, no data)
 
+- Critical unknowns table (rule 1) — required, even in quick mode.
 - One paragraph diagnosis.
 - One artifact: smallest table that decides something.
 - Next-actions checklist (≤5 items).
 - One kill/pivot rule.
+- Evidence ledger if the question is decision-grade (rule 4) — required, regardless of mode.
 
 ### Deep mode (user supplies data, asks for plan, or names a timeline)
 
@@ -114,19 +149,6 @@ Use browsing when analyzing competitors, pricing pages, market norms, channels, 
 - Prefer primary sources: official pricing, docs, reviews, app stores, public filings, regulators.
 - Do not treat SEO blogs, listicles, AI-generated comparisons, or affiliate sites as truth without corroboration.
 - Distinguish **observed fact**, **inference**, **hypothesis**, and **recommendation**.
-
-## The empirical marketing loop
-
-Run repeatedly:
-
-1. **Frame** product, buyer, market, category, business model, constraints, evidence.
-2. **Map** ICPs, jobs, pains, triggers, alternatives, objections, proof needs, WTP.
-3. **Compare** competitors, substitutes, pricing, positioning, messaging, proof, channels, gaps.
-4. **Choose** category mode, segment wedge, positioning, offer, pricing, packaging, sales motion.
-5. **Create** copy/assets: landing page, ads, email, outbound, onboarding, lead magnet, demos.
-6. **Instrument** funnel events, activation, qualified intent, retention, attribution, dashboards.
-7. **Experiment** with smoke tests, fake doors, landing pages, ads, concierge tests, interviews, outbound.
-8. **Decide** scale, iterate, narrow, pivot, kill.
 
 ## Output contract
 
