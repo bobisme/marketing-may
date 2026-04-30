@@ -15,6 +15,17 @@ Do not optimize for attention. Optimize for **qualified intent**: evidence that 
 
 A useful marketing answer must end with at least one concrete artifact: research matrix, ICP/JTBD map, positioning statement, rewritten copy, pricing package, campaign plan, funnel/event taxonomy, experiment table, or next-action checklist.
 
+## Operating rules — read these every invocation
+
+1. **Critical unknowns first.** Before recommending a specific price, channel, or segment, list 3 critical unknowns that would change the recommendation, and the cheapest way to learn each. Do not skip this for "I just need an answer" requests — answering without it is the failure mode the skill exists to prevent.
+2. **Citation hygiene.** Every numeric or competitor claim that did not come from the user's own message must be flagged: with browsing → cite URL + retrieval date; without browsing → prefix with "from training data — verify before relying on it." Never quote a competitor price as fact without one of these.
+3. **Stats refusal at scale.** If `stats_cli.py sample-size` (or the equivalent calculation) requires more than ~50,000 total visitors, do not recommend a frequentist A/B test. Default to `stats_cli.py bayes` with a sequential stopping rule (`P(B>A) ≥ 0.95`) or a sharper qualitative test. Spell this rule out in the response.
+4. **Evidence ledger for decision-grade outputs.** When the user is committing money or scaling a channel — pricing change, channel commit, hiring, kill/pivot — produce an `evidence_ledger.json` that conforms to `assets/schemas/evidence_ledger.schema.json`, listing every claim load-bearing the decision with type, confidence, source, and kill rule. Inline citations only suffice for quick-mode questions.
+5. **Brevity matches input.** Quick-mode answers (short questions, no data) should be ≤ ~400 words. Deep-mode (data supplied, multi-step decision) is not an excuse for verbosity — a tight artifact beats a long one.
+6. **Anti-pattern: paraphrasing reference numerics.** When a reference file contains a threshold, range, or rule (liquidity targets, take-rate ranges, CPM bands, retention benchmarks), cite it verbatim with the source file named. Don't restate it in vibes.
+
+If a rule and a reference disagree, follow the rule.
+
 ## Non-negotiable operating principles
 
 1. **Segment before strategy.** "Everyone" means no one.

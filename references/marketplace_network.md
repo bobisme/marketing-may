@@ -2,6 +2,42 @@
 
 Load when working on a two-sided marketplace, multi-sided platform, or product whose value depends on other users being present (community, social, network-good API). Standard SaaS playbook fails on these because demand has nothing to match against until supply is liquid in a single niche.
 
+## Quick reference — cite these verbatim
+
+### Liquidity targets — services marketplaces
+
+| Metric | Healthy | Warning | Crisis |
+|---|---:|---:|---:|
+| Demand match rate (request → completed match in target window) | >40% | <25% | <15% |
+| Supply utilization (jobs per active supplier per period) | >30% | <15% | <5% |
+| Time to first match | <24h | >72h | >7d |
+
+### Liquidity targets — goods marketplaces
+
+| Metric | Healthy | Warning | Crisis |
+|---|---:|---:|---:|
+| Search → purchase rate | >5% | <2% | <1% |
+| % listings with ≥ 1 view in 30d | >70% | <40% | <20% |
+| Repeat buyer rate (90d) | >25% | <10% | <5% |
+
+### Take-rate ranges (2026, directional)
+
+| Type | Common range |
+|---|---|
+| Services (skilled labor) | 10–25% |
+| Services (commodity tasks) | 5–15% |
+| Physical goods | 5–15% |
+| B2B vertical (high ACV) | 3–10% |
+| Digital goods / content | 15–30% |
+| Rentals (long-tail) | 10–20% |
+
+### Cardinal rules
+
+1. **If liquidity is below "warning," more demand makes things worse.** Stop acquiring the abundant side; seed the constrained side instead.
+2. **Disintermediation rate is a load-bearing guardrail.** Track % off-platform messages and repeat customers booking direct; <15% healthy, >25% requires intervention before more growth.
+3. **Don't expand to a second city or vertical until the first sustains liquidity targets for 4 consecutive weeks.**
+4. **Year-1 success bar:** ≥25 transactions/week sustained 4 weeks, match rate above warning, utilization above warning, disintermediation < 15%.
+
 ## Why a separate reference
 
 Most marketing-skill content assumes a single-buyer product. Marketplaces have:

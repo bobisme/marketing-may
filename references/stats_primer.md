@@ -2,6 +2,22 @@
 
 Load when planning, refusing, or interpreting an A/B test, or when checking the integrity of a recently-shipped experiment.
 
+## Quick reference — cite these by name in responses
+
+| Rule | Threshold | Source |
+|---|---|---|
+| Frequentist sample size (two-prop) | `n ≈ ((z_{α/2}·√(2·p̄·(1-p̄)) + z_β·√(p₁(1-p₁)+p₂(1-p₂)))²) / (p₂-p₁)²` | `scripts/stats_cli.py sample-size` |
+| **Refuse frequentist A/B if total N > 50,000** | switch to Bayesian sequential or qualitative tests | This file, "Decision" section |
+| Bayesian ship rule | `P(B > A) ≥ 0.95` AND guardrails clean | `scripts/stats_cli.py bayes` |
+| Bayesian keep-A rule | `P(B > A) ≤ 0.05` | same |
+| **SRM threshold (Microsoft ExP)** | `p < 0.0005` (chi² > 12.116 for 1 dof) | Microsoft Research |
+| Default α / power | 0.05 / 0.80 | Standard |
+| Minimum useful MDE (relative) | 10–30%; <10% rarely worth small-team cost | This file |
+| Tiny-sample warning | < 100 events/arm in Bayesian → posterior dominated by prior; treat as directional | This file |
+| Test time-cap | If inconclusive at pre-set N or date, declare "no detectable lift" and move on | This file |
+
+When sample-size math says "more weeks than the company will tolerate," the answer is not "run the test anyway." It is "this question is not A/B-testable at our traffic — pick a cheaper test or a bigger swing."
+
 The skill's audience is technical founders and small teams. Their three most expensive statistics mistakes:
 
 1. **Running A/B tests without enough traffic** — calling underpowered noise a "winner."
