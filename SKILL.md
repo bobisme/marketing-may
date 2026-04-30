@@ -40,6 +40,54 @@ Collect when possible. If data is missing, proceed with assumptions and label th
 | Business | Revenue model, price, ACV/AOV, gross margin, budget | CAC, payback, churn, activation, expansion, sales cycle |
 | Goals | Growth target, timeline, constraints | Funnel metrics, attribution assumptions, team capacity |
 
+## Routing — pick the smallest set of references
+
+Match user intent to columns. Default to loading 1–3 files; never load all.
+
+| User intent (paraphrase) | Load reference(s) | Load template(s) | Run script(s) |
+|---|---|---|---|
+| "Help me pick who to sell to" | `segmentation_icp`, `discovery` | `02_icp_jtbd_segment_map` | — |
+| "Rewrite my landing page / hero / copy" | `positioning_messaging`, `asset_patterns` | `04_positioning_messaging_copy` | `message_miner` (if VOC text), `copy_lint` |
+| "What should I charge?" | `pricing_offer` | `05_pricing_packaging_offer` | `pricing_research_analyzer` |
+| "Are competitors eating us?" | `competitive_intel`, `browsing_recipe` | `03_competitive_intelligence` | `competitor_matrix` |
+| "Why isn't our funnel converting?" | `funnel_analytics`, `segmentation_icp` | `06_funnel_instrumentation` | `funnel_analyzer` |
+| "Should we run this test? / How big a sample?" | `experiments`, `stats_primer`, `ALGORITHMS` §7 | `07_experiment_plan` | `experiment_prioritizer`, `stats_cli` |
+| "We just shipped a test — read the result" | `experiments`, `stats_primer` | `07_experiment_plan` (post-test memo) | `stats_cli srm`, `stats_cli bayes` |
+| "Pick a channel / cold outbound" | `channels_outbound` | `08_channel_strategy` | — |
+| "Are we kidding ourselves?" | `decision_trees`, `ALGORITHMS` §9 | `09_kill_pivot_narrow` | — |
+| "Run customer interviews" | `discovery` | `01_customer_discovery` | — |
+| "Vague: grow / get users / market it" | `PRACTICE_DIGEST`, then `segmentation_icp` | `00_product_intake` | — |
+| "Show me a worked example" | `examples/case_studies/` | — | — |
+
+Rules:
+
+- If the user gives < 3 sentences and no data, run `00_product_intake` first. Never draft assets before an ICP and a named alternative exist.
+- For browsing tasks, load `browsing_recipe` so extraction is structured, not vibes.
+- For decisions involving real money or a channel commitment, emit an evidence ledger; otherwise inline citations are fine.
+
+## Response shape
+
+Pick a shape from the user's signal. Do not default to deep mode.
+
+### Quick mode (default for short questions, < 3 user sentences, no data)
+
+- One paragraph diagnosis.
+- One artifact: smallest table that decides something.
+- Next-actions checklist (≤5 items).
+- One kill/pivot rule.
+
+### Deep mode (user supplies data, asks for plan, or names a timeline)
+
+- Full output contract: know / assume / matters now / artifact / next actions / kill rule.
+- Multiple artifacts allowed.
+- Cite browsing where used.
+
+### Workshop mode (user pastes intake or asks "where do we start")
+
+- Run `00_product_intake` interactively.
+- Ask one question at a time when context is missing.
+- Never produce assets before an ICP and an alternative are named.
+
 ## Source and browsing protocol
 
 Use browsing when analyzing competitors, pricing pages, market norms, channels, regulations, reviews, search behavior, or anything likely to have changed.
@@ -124,7 +172,10 @@ Read each as needed. Do not load all of them.
 | `references/ALGORITHMS.md` | Detailed scoring formulas (evidence tensor, segment, channel, value metric, experiment priority) |
 | `references/PRACTICE_DIGEST.md` | Field rules and heuristics in compact form |
 | `references/BIBLIOGRAPHY.md` | Source bibliography for marketing claims and frameworks |
+| `references/browsing_recipe.md` | Per-page extraction prompts and stopping rules for live competitor/pricing/review/AI-search research |
+| `references/stats_primer.md` | When to A/B test, when to refuse, sample-size sanity, SRM as precondition, Bayesian small-traffic guidance |
 | `references/examples/` | Sample input data: competitors CSV, events CSV, experiments CSV, Van Westendorp/Gabor-Granger, VOC text |
+| `references/examples/case_studies/` | Filled walk-throughs (indie devtool, marketplace cold-start) showing intake → decision |
 
 ## Templates and schemas
 
@@ -160,3 +211,5 @@ Run for repeatable analyses. Each accepts CSV/text inputs (see `references/examp
 | `scripts/funnel_analyzer.py` | Compute funnel conversion and drop-off |
 | `scripts/message_miner.py` | Extract buyer language from VOC text |
 | `scripts/pricing_research_analyzer.py` | Analyze Van Westendorp / Gabor-Granger inputs |
+| `scripts/stats_cli.py` | Sample-size, SRM check, Bayesian P(B>A) for low-traffic experiments |
+| `scripts/copy_lint.py` | Mechanical check of marketing copy against the quality checklist (vague adjectives, unsupported claims, dark patterns, hidden price, missing CTA) |
