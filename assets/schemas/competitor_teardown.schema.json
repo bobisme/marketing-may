@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Competitor Teardown",
+  "type": "object",
+  "required": ["category", "competitors", "norms", "gaps"],
+  "properties": {
+    "category": {"type": "string"},
+    "competitors": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "url", "positioning", "pricing", "proof", "cta", "strengths", "weaknesses"],
+        "properties": {
+          "name": {"type": "string"},
+          "url": {"type": "string"},
+          "positioning": {"type": "string"},
+          "icp": {"type": "string"},
+          "pricing": {"type": "string"},
+          "proof": {"type": "array", "items": {"type": "string"}},
+          "cta": {"type": "string"},
+          "channels": {"type": "array", "items": {"type": "string"}},
+          "strengths": {"type": "array", "items": {"type": "string"}},
+          "weaknesses": {"type": "array", "items": {"type": "string"}}
+        }
+      }
+    },
+    "norms": {"type": "array", "items": {"type": "string"}},
+    "gaps": {"type": "array", "items": {"type": "string"}},
+    "whitespace_opportunities": {"type": "array", "items": {"type": "string"}}
+  }
+}

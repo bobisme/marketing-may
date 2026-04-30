@@ -1,0 +1,11 @@
+respondent,segment,too_cheap,cheap,expensive,too_expensive
+1,solo,9,19,79,149
+2,solo,10,29,99,199
+3,solo,19,39,129,249
+4,startup,29,79,249,499
+5,startup,39,99,299,599
+6,startup,49,149,399,799
+7,scaleup,99,249,799,1499
+8,scaleup,149,399,999,1999
+9,scaleup,199,499,1499,2499
+10,scaleup,99,299,899,1999

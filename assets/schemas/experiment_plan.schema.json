@@ -1,0 +1,36 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Marketing Experiment Plan",
+  "type": "object",
+  "required": ["product", "experiments", "decision_cadence"],
+  "properties": {
+    "product": {"type": "string"},
+    "decision_cadence": {"type": "string", "description": "When the team will review results."},
+    "instrumentation_notes": {"type": "string"},
+    "experiments": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["assumption", "hypothesis", "audience", "channel", "test", "metric", "threshold", "decision_rule"],
+        "properties": {
+          "assumption": {"type": "string"},
+          "hypothesis": {"type": "string"},
+          "audience": {"type": "string"},
+          "channel": {"type": "string"},
+          "test": {"type": "string"},
+          "metric": {"type": "string"},
+          "threshold": {"type": "string"},
+          "cost": {"type": "string"},
+          "risk": {"type": "string"},
+          "expected_learning": {"type": "string"},
+          "decision_rule": {"type": "string"},
+          "guardrail_metrics": {"type": "array", "items": {"type": "string"}},
+          "owner": {"type": "string"},
+          "duration": {"type": "string"}
+        },
+        "additionalProperties": true
+      }
+    }
+  },
+  "additionalProperties": false
+}

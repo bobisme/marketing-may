@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Marketing Asset",
+  "type": "object",
+  "required": ["asset_type", "audience", "job", "draft", "proof", "objections", "cta"],
+  "properties": {
+    "asset_type": {"type": "string", "enum": ["landing_page", "ad", "email", "cold_outreach", "product_description", "tagline", "onboarding", "lead_magnet", "sales_deck"]},
+    "audience": {"type": "string"},
+    "job": {"type": "string"},
+    "trigger": {"type": "string"},
+    "promise": {"type": "string"},
+    "draft": {"type": "string"},
+    "proof": {"type": "array", "items": {"type": "string"}},
+    "objections": {"type": "array", "items": {"type": "string"}},
+    "cta": {"type": "string"},
+    "compliance_notes": {"type": "array", "items": {"type": "string"}},
+    "test_metric": {"type": "string"}
+  }
+}

@@ -1,0 +1,10 @@
+I waste hours every week chasing audit evidence across Slack, Google Drive, and random spreadsheets.
+The manual process is slow and confusing, and we always miss something right before the deadline.
+I would pay if it saved our security lead from spreadsheet work and made audit prep faster.
+The biggest objection is trust: I need to know how the product handles security and privacy before connecting accounts.
+We currently use spreadsheets and a consultant because switching feels risky during an audit.
+When a customer asks for SOC 2 evidence, we drop everything and scramble for screenshots.
+After a funding round, the board pushed us to professionalize security reporting.
+I want a demo with sample output, a security page, and a migration checklist before trying it.
+The setup cannot be a learning curve; we need concierge onboarding or templates.
+If it reduces audit prep from weeks to days, the price is less important than confidence and support.

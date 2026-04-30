@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Pricing Research Plan",
+  "type": "object",
+  "required": ["segments", "value_metric", "packages", "willingness_to_pay_tests"],
+  "properties": {
+    "segments": {"type": "array", "items": {"type": "string"}},
+    "value_metric": {"type": "string"},
+    "pricing_model": {"type": "string"},
+    "packages": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "buyer", "price", "included", "excluded", "upgrade_trigger"],
+        "properties": {
+          "name": {"type": "string"},
+          "buyer": {"type": "string"},
+          "price": {"type": "string"},
+          "included": {"type": "array", "items": {"type": "string"}},
+          "excluded": {"type": "array", "items": {"type": "string"}},
+          "upgrade_trigger": {"type": "string"}
+        }
+      }
+    },
+    "willingness_to_pay_tests": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["method", "audience", "question_or_behavior", "success_threshold"],
+        "properties": {
+          "method": {"type": "string"},
+          "audience": {"type": "string"},
+          "question_or_behavior": {"type": "string"},
+          "success_threshold": {"type": "string"}
+        }
+      }
+    },
+    "risk_notes": {"type": "array", "items": {"type": "string"}}
+  }
+}
