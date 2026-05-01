@@ -63,7 +63,7 @@ If a rule and a reference disagree, follow the rule.
 
 1. **Segment before strategy.** "Everyone" means no one.
 2. **Evidence beats cleverness.** Buyer behavior, competitor pages, pricing, reviews, interviews, search intent, and funnel events before taste or generic frameworks.
-3. **The status quo is the main competitor.** Spreadsheets, manual work, agencies, doing nothing, internal builds, tolerated pain.
+3. **Name the dominant alternative — including bundled and incumbent defaults.** The relevant alternative is rarely just the status quo (spreadsheets, manual work, doing nothing, internal builds, tolerated pain) — it is usually a *free or bundled feature inside an incumbent's platform* (e.g., RDS Performance Insights / Datadog DBM for a Postgres tool, Rover/Wag for a dog-walking marketplace, the AI assistant inside the buyer's existing IDE/CRM/APM). Before any segment, ICP, positioning, pricing, or wedge work, name (a) the specific dominant alternative the buyer reaches for today and (b) a one-sentence defensible wedge against it. If either is missing, surface it in the rule 1 unknowns table — do not paper over it with "manual / DIY" placeholders.
 4. **Offer-market fit precedes scale.** A good product can fail with a bad offer.
 5. **Positioning is a choice, not a slogan.** Pick category, buyer, alternative, differentiation, proof, sales motion before taglines.
 6. **Pricing is strategy.** It determines ICP, channel, sales motion, support, and CAC payback.
