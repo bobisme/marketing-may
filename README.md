@@ -10,13 +10,115 @@ npx skills add bobisme/marketing-may
 
 ## How to Use
 
-Ask your agent.
+Ask your agent. The skill auto-loads when your prompt mentions marketing, positioning, messaging, copy, landing pages, ads, pricing, channels, funnels, retention, experiments, customer discovery, competitive research, or growth decisions.
 
 ## Disclaimer
 
 This will only lose you money. Don't use it.
 
 If it makes you money, Bob is not liable for any injuries caused by carrying large sacks of currency, the burden of turning down excessive requests for romantic relationships, or accidents in your overpriced sports cars.
+
+## Example prompts
+
+The skill routes by intent. Below are prompts that exercise each branch — copy, adapt, or paste your own context.
+
+Add "Use /marketing-may" (claude) or "Use $marketing-may" (codex) to these examples to ensure the skill gets triggered.
+
+### Segmentation, ICP & JTBD
+
+- "Help me pick a segment to focus on. We're a Postgres slow-query tool selling to backend engineers, marketing managers, and DBAs — we can't tell which buyer to commit to."
+- "Score these 4 segments for us: solo founders, seed-stage CTOs, Series A platform teams, enterprise DBAs."
+- "Write an ICP and JTBD map for a hosted Temporal alternative."
+
+### Positioning & messaging copy rewrite
+
+- "Rewrite my hero section. Current copy: '<paste>'. We sell observability for ML inference."
+- "Our landing page isn't converting. Here's the URL / here's the copy — diagnose and rewrite."
+- "Give me a positioning statement. Category, buyer, alternative, differentiation, proof, sales motion."
+- "Mine this VOC dump for buyer language" (paste reviews / interview notes / support tickets — runs `message_miner.py`).
+- "Lint this landing-page copy" (runs `copy_lint.py` against vague adjectives, unsupported superlatives, dark patterns, hidden price, missing CTA).
+
+### Pricing & offer
+
+- "What should I charge for a self-serve Postgres slow-query tool?" (will refuse a number without WTP evidence; returns a test design instead).
+- "Here's a Van Westendorp CSV from 42 respondents — what does it say?" (runs `pricing_research_analyzer.py`).
+- "Design a pricing test. We're considering $49 / $99 / $199 monthly."
+- "Critique our packaging — Free / Pro $29 / Team $99 / Enterprise call us."
+
+### Competitive intel
+
+- "Are competitors eating us? Direct rivals: Datadog DBM, pganalyze. Substitutes: RDS Performance Insights, manual EXPLAIN."
+- "Tear down pganalyze, Datadog DBM, and RDS Performance Insights — features, price, ICP, positioning, gaps."
+- "Build a competitor matrix from this CSV" (runs `competitor_matrix.py`).
+- "Find the whitespace in the Postgres tooling category."
+
+### Funnel, activation & retention
+
+- "Why isn't our funnel converting? Here's signup → activated → paid for last 90 days."
+- "Analyze this funnel CSV by segment" (runs `funnel_analyzer.py`).
+- "Are users sticking around? Here's cohort × week event data" (runs `retention_analyzer.py` for plateau/declining/flattening verdict).
+- "Pick our activation event. We're a usage-based API product."
+- "Design an event taxonomy that survives a rewrite."
+
+### Metric trees & north-star
+
+- "What should our north-star metric be? We're a two-sided marketplace for dog walkers."
+- "Build a metric tree for a sales-led B2B SaaS at $40k ACV."
+- "Give me the starter metric tree for OSS-led commercial."
+
+### Experiments & stats
+
+- "Should we run this test? Variant A vs. variant B on the pricing page, ~3,800 weekly visitors." (will refuse frequentist at low traffic and route to Bayesian).
+- "How big a sample do I need to detect a 2pp lift on a 6% baseline?" (runs `stats_cli.py sample-size`).
+- "We just shipped a test — here's the result. 412 / 9,103 vs. 478 / 9,088. Read it." (runs `stats_cli.py srm` + `bayes`).
+- "Rank these 12 experiments by Expected Learning Value" (runs `experiment_prioritizer.py`).
+- "Write an experiment plan with pre-registered decision rules."
+
+### Channels & outbound
+
+- "Pick a channel for us. ACV $1.2k, 0 brand, 1 founder, no budget."
+- "Draft a cold-outbound playbook for platform engineers at 200–2,000-person companies."
+- "Score this account list against our ICP" (runs `outbound_list_scorer.py` for A/B/C tiers).
+- "Should I sponsor this newsletter? 38k subs, $4,200, dev audience." (uses 2026 CPM bands).
+- "How do I get cited by ChatGPT / Perplexity for queries in my category?" (loads `modern_channels.md` AEO/GEO patterns).
+
+### Marketplaces
+
+- "We're building a marketplace for X. Where do we start?" (loads `marketplace_network.md` cold-start playbook).
+- "What's the liquidity target we should be hitting at week 12?"
+- "We have supply but no demand — what's the next move?"
+
+### Kill / pivot / narrow
+
+- "Are we kidding ourselves? Here's 6 months of data: 14 paying customers, $890 MRR, 11% monthly churn, CAC $740."
+- "Should we kill this product? Should we narrow? Should we pivot? Here's the evidence."
+- "Pre-register a kill rule for the next 8 weeks."
+
+### Customer discovery
+
+- "I want to run customer interviews. Write me a switch-interview script."
+- "Here are 5 interview transcripts — extract pain, outcome, objection, trigger, alternative, proof."
+- "Design a commitment menu for ICP-validation calls."
+
+### "I have no idea where to start" (vague growth questions)
+
+- "Help me grow this thing."
+- "How do I market this?" → triggers workshop mode: runs `00_product_intake` interactively, asks one question at a time, refuses to draft assets until ICP and dominant alternative are named.
+
+### Worked examples
+
+- "Show me a worked example for an indie devtool getting to revenue."
+- "Show me the marketplace cold-start case study."
+
+## Response modes
+
+Phrasing shifts the response shape:
+
+- **Quick mode** (default, ≤400 words) — short question, no data. Always opens with a "Critical unknowns" table, then a one-paragraph diagnosis, smallest artifact, ≤5 next actions, one kill rule.
+- **Deep mode** — paste data, ask for a plan, or name a timeline ("here's our funnel CSV — give me a 30-day plan").
+- **Workshop mode** — paste an intake, or ask "where do we start?" — agent runs the intake template interactively.
+
+Decision-grade questions (pricing commits, channel scaling, kill/pivot, hiring) additionally emit a JSON evidence ledger with kill rules per claim — regardless of mode.
 
 ## Features
 
