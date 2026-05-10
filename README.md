@@ -2,6 +2,10 @@
 
 Agent skill for doing data-driven marketing.
 
+Run it on your project without additional prompting to get a review of the
+marketing posture of your project with actionable next steps. See the examples
+below for more advanced usage.
+
 ## Install
 
 ```shell
@@ -10,13 +14,7 @@ npx skills add bobisme/marketing-may
 
 ## How to Use
 
-Ask your agent. The skill auto-loads when your prompt mentions marketing, positioning, messaging, copy, landing pages, ads, pricing, channels, funnels, retention, experiments, customer discovery, competitive research, or growth decisions.
-
-## Disclaimer
-
-This will only lose you money. Don't use it.
-
-If it makes you money, Bob is not liable for any injuries caused by carrying large sacks of currency, the burden of turning down excessive requests for romantic relationships, or accidents in your overpriced sports cars.
+The skill auto-loads when your prompt mentions marketing, positioning, messaging, copy, landing pages, ads, pricing, channels, funnels, retention, experiments, customer discovery, competitive research, or growth decisions.
 
 ## Example prompts
 
