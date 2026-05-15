@@ -1,0 +1,106 @@
+#!/bin/sh
+# render — compile a teardown report to PDF without assuming Typst is installed.
+#
+#   bin/render <input.typ> [output.pdf]
+#
+# Resolution order for the Typst compiler:
+#   1. $TYPST_BIN                         (explicit override)
+#   2. `typst` on PATH                    (use what the user already has)
+#   3. cached binary in the cache dir     (downloaded on a previous run)
+#   4. download the pinned static release (single file, no dependencies)
+#
+# Nothing is sent anywhere: the report is compiled locally. The only network
+# access is a one-time download of the official Typst binary if the machine
+# doesn't already have one (skippable by pre-installing Typst or setting
+# $TYPST_BIN). Pinned for reproducibility; override with $TYPST_VERSION.
+set -eu
+
+TYPST_VERSION="${TYPST_VERSION:-v0.14.2}"
+CACHE_DIR="${XDG_CACHE_HOME:-$HOME/.cache}/marketing-may-typst"
+
+# --- locate the skill's own files (fonts/, *.typ) regardless of cwd ---------
+SCRIPT="$0"
+while [ -h "$SCRIPT" ]; do
+  link=$(readlink "$SCRIPT")
+  case "$link" in /*) SCRIPT="$link" ;; *) SCRIPT=$(dirname "$SCRIPT")/$link ;; esac
+done
+SKILL_DIR=$(CDPATH= cd -- "$(dirname "$SCRIPT")/.." && pwd)
+FONTS_DIR="$SKILL_DIR/fonts"
+
+usage() { echo "usage: bin/render <input.typ> [output.pdf]" >&2; exit 2; }
+[ $# -ge 1 ] || usage
+INPUT="$1"
+OUTPUT="${2:-${INPUT%.typ}.pdf}"
+[ -f "$INPUT" ] || { echo "render: no such file: $INPUT" >&2; exit 1; }
+
+# --- pick the release asset for this platform ------------------------------
+asset() {
+  os=$(uname -s); arch=$(uname -m)
+  case "$os" in
+    Linux)
+      case "$arch" in
+        x86_64|amd64)  echo "typst-x86_64-unknown-linux-musl" ;;
+        aarch64|arm64) echo "typst-aarch64-unknown-linux-musl" ;;
+        armv7l)        echo "typst-armv7-unknown-linux-musleabi" ;;
+        *) return 1 ;;
+      esac ;;
+    Darwin)
+      case "$arch" in
+        arm64)  echo "typst-aarch64-apple-darwin" ;;
+        x86_64) echo "typst-x86_64-apple-darwin" ;;
+        *) return 1 ;;
+      esac ;;
+    *) return 1 ;;  # Windows: use WSL, or install Typst and set $TYPST_BIN
+  esac
+}
+
+download_typst() {
+  base=$(asset) || {
+    echo "render: no prebuilt Typst for $(uname -s)/$(uname -m)." >&2
+    echo "        Install Typst (https://typst.app) and set \$TYPST_BIN." >&2
+    exit 1
+  }
+  dest="$CACHE_DIR/$TYPST_VERSION"
+  bin="$dest/typst"
+  if [ -x "$bin" ]; then echo "$bin"; return; fi
+  command -v curl >/dev/null 2>&1 || { echo "render: curl required to fetch Typst." >&2; exit 1; }
+  mkdir -p "$dest"
+  url="https://github.com/typst/typst/releases/download/$TYPST_VERSION/$base.tar.xz"
+  echo "render: fetching Typst $TYPST_VERSION (one-time, ~30MB)…" >&2
+  tmp=$(mktemp -d)
+  trap 'rm -rf "$tmp"' EXIT
+  curl -fsSL "$url" -o "$tmp/typst.tar.xz" \
+    || { echo "render: download failed: $url" >&2; exit 1; }
+  tar -xf "$tmp/typst.tar.xz" -C "$tmp"           # modern tar autodetects xz
+  found=$(find "$tmp" -type f -name typst -perm -u+x 2>/dev/null | head -n1)
+  [ -n "$found" ] || found=$(find "$tmp" -type f -name typst | head -n1)
+  [ -n "$found" ] || { echo "render: typst binary not found in archive." >&2; exit 1; }
+  cp "$found" "$bin"
+  chmod +x "$bin"
+  echo "$bin"
+}
+
+# --- resolve the compiler --------------------------------------------------
+if [ -n "${TYPST_BIN:-}" ]; then
+  TYPST="$TYPST_BIN"
+elif [ "${MARKETING_MAY_FORCE_DOWNLOAD:-0}" != "1" ] && command -v typst >/dev/null 2>&1; then
+  TYPST="typst"
+elif [ -x "$CACHE_DIR/$TYPST_VERSION/typst" ]; then
+  TYPST="$CACHE_DIR/$TYPST_VERSION/typst"
+else
+  TYPST=$(download_typst)
+fi
+
+# --- compile ---------------------------------------------------------------
+# Build in a temp dir so the content file can live anywhere and still
+# `#import "teardown.typ"`: we stage the content next to the template and the
+# fonts, compile there, and write the PDF to the requested path. Keeps the
+# skill dir read-only-clean and frees the caller from Typst's root rules.
+case "$OUTPUT" in /*) OUT_ABS="$OUTPUT" ;; *) OUT_ABS="$(pwd)/$OUTPUT" ;; esac
+build=$(mktemp -d)
+trap 'rm -rf "$build"' EXIT
+cp "$SKILL_DIR/teardown.typ" "$build/teardown.typ"
+cp "$INPUT" "$build/main.typ"
+"$TYPST" compile --font-path "$FONTS_DIR" --ignore-system-fonts \
+  "$build/main.typ" "$OUT_ABS"
+echo "render: wrote $OUTPUT" >&2

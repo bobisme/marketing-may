@@ -1,12 +1,19 @@
 install:
     rsync -av --delete \
       --exclude='.git' \
-      --exclude='Justfile' \
-      --exclude='README.md' \
-      --exclude='tests' \
-      --exclude='pyrightconfig.json' \
-      --exclude='requirements-dev.txt' \
+      --exclude='/Justfile' \
+      --exclude='/README.md' \
+      --exclude='/docs' \
+      --exclude='/tests' \
+      --exclude='/pyrightconfig.json' \
+      --exclude='/requirements-dev.txt' \
       --exclude='__pycache__' \
+      --exclude='.pytest_cache' \
+      --exclude='.mypy_cache' \
+      --exclude='.ruff_cache' \
+      --exclude='.venv' \
+      --exclude='typst/preview' \
+      --exclude='*.pdf' \
       . ~/.agents/skills/marketing-may/
 
 test:

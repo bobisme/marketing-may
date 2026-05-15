@@ -6,3 +6,8 @@ __pycache__/
 *.egg-info/
 .venv/
 venv/
+
+# typst build artifacts (regenerable; the .typ sources + fonts ship, not these)
+typst/preview/
+typst/report.pdf
+typst/*.pdf

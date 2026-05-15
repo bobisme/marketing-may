@@ -132,6 +132,7 @@ Pick a shape from the user's signal. Do not default to deep mode.
 - Full output contract: know / assume / matters now / artifact / next actions / kill rule.
 - Multiple artifacts allowed.
 - Cite browsing where used.
+- If the user wants a **report / PDF / shareable document**, the artifact is a rendered PDF via the Typst template (see **Report rendering**); otherwise it is inline markdown.
 
 ### Workshop mode (user pastes intake or asks "where do we start")
 
@@ -241,6 +242,21 @@ Fill these in or copy into user output.
 | `assets/schemas/marketing_asset.schema.json` | Validate produced assets |
 | `assets/schemas/pricing_research.schema.json` | Validate pricing study output |
 | `assets/schemas/evidence_ledger.schema.json` | Validate the evidence ledger that accompanies decision-grade outputs (pricing commits, channel scaling, hiring, kill/pivot decisions) |
+| `typst/` | Render a teardown / pricing review / competitive analysis as a polished PDF report (see **Report rendering**) |
+
+## Report rendering (PDF deliverable)
+
+When the user asks to **write / produce / generate a report**, wants a **PDF**, a **shareable** or **formal deliverable** (a teardown, pricing review, or competitive analysis *as a document*) — render it with the bundled Typst template in `typst/`. This is for explicit document requests only; quick and exploratory answers stay inline markdown.
+
+The template **is** this skill's analysis in document form: cover → TL;DR + three priorities → **Critical-unknowns table** → diagnosis → positioning → copy rewrite → **pricing confusion ledger** → trust-fix / next-actions → **kill / pivot / narrow rules** → appendices (extracted copy + **citation hygiene**). It already encodes operating rules 1 and 2 and the kill rule — fill it, don't fight it.
+
+Workflow:
+
+1. Read `typst/README.md` (authoring API). Copy `typst/report.typ` as the starting point — it is a worked sample of every block type.
+2. Write a content `.typ` (anywhere) that does `#import "teardown.typ": *` and fills `#report(...)` with the real findings via the block constructors: `section`, `kv`, `etable` with `nc[]` cells and the `#precondition` tag (use it for the rule-1 validity preconditions), `ul`, `ol`, `callout`, `quote-pull`, `rule-def`, `dl`, `#ic[]`, `#xref()`. Never edit `teardown.typ` — styling is fixed.
+3. Render: `typst/bin/render <content>.typ <out>.pdf`. It uses Typst if present, else downloads the pinned static binary once (no install assumption), and sends nothing anywhere — reports are confidential.
+
+The PDF is the artifact; it does not replace the operating rules in your chat reply. Still open with the critical-unknowns table (rule 1), and for decision-grade asks still emit the evidence-ledger JSON (rule 4) — the report's citation-hygiene appendix is discipline, not the ledger.
 
 ## Scripts
 

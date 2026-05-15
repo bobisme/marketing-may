@@ -16,6 +16,25 @@ npx skills add bobisme/marketing-may
 
 The skill auto-loads when your prompt mentions marketing, positioning, messaging, copy, landing pages, ads, pricing, channels, funnels, retention, experiments, customer discovery, competitive research, or growth decisions.
 
+## Beautiful PDF reports
+
+Ask for a **report** and you get one — a typeset, editorial PDF, not a wall of Markdown. When you request a *report*, *PDF*, or *shareable deliverable* (a teardown, pricing review, or competitive analysis as a document), the skill renders it with a bundled [Typst](https://typst.app) template: paper-white editorial layout, real typefaces, hairline tables, the critical-unknowns ledger, kill/pivot rules, and appendices — the skill's own analysis structure, typeset. No Typst install required: the renderer fetches a pinned static binary on first use, and nothing leaves your machine (reports are confidential).
+
+> Use /marketing-may — produce a marketing & copy teardown of https://your-site.com as a PDF report.
+
+Example output — the bundled sample, [`docs/example-report.pdf`](docs/example-report.pdf) (cover and TL;DR/contents pages):
+
+<p align="center">
+  <img src="docs/report-p1.png" width="49%" alt="Example report — cover page" />
+  <img src="docs/report-p2.png" width="49%" alt="Example report — TL;DR and contents page" />
+</p>
+
+Or render one yourself from structured content — see the authoring API in [`typst/`](typst/):
+
+```shell
+typst/bin/render your-report.typ out.pdf
+```
+
 ## Example prompts
 
 The skill routes by intent. Below are prompts that exercise each branch — copy, adapt, or paste your own context.
